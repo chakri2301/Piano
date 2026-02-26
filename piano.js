@@ -1,26 +1,32 @@
 var q5 = new Q5();
 let synth = null;
 
-//play a middle 'C' for the duration of an 8th note
 
 q5.createCanvas(windowWidth, windowHeight);
+//Width for the lane of each note
 const noteW = windowWidth / 8;
+// length of a 1 sec length note
 const dPerS = windowHeight / 2;
+// the yellow collector bar size
 const collecterHeight = windowHeight * 0.02;
-const notes = ["z", "x", "c", "v", "b", "n", "m", ","];
+
+const notes = ["a", "s", "d", "f", "g", "h", "j", "k"];
+//Keyboard mapping
 const noteValues = {
-    "z": "C4",
-    "x": "D4",
-    "c": "E4",
-    "v": "F4",
-    "b": "G4",
-    "n": "A4",
-    "m": "B4",
-    ",": "C5"
+    "a": "C4",
+    "s": "D4",
+    "d": "E4",
+    "f": "F4",
+    "g": "G4",
+    "h": "A4",
+    "j": "B4",
+    "k": "C5"
 }
 console.log("WIndow height is" + windowHeight);
 console.log("WIndow width is" + windowWidth);
+// Tiles array
 let pKeys = [];
+
 function start() {
     const len = 0.5;
     const keys = [2, 1, 0, 1, 2, 2, 2, 1, 1, 1, 2, 4, 4, 2, 1, 0, 1, 2, 2, 2, 1, 1, 2, 1, 0];
@@ -30,6 +36,7 @@ function start() {
     });
     synth = new Tone.Synth().toDestination();
 }
+//Tiles class
 class Note {
     constructor(n, time) {
         this.n = n;
@@ -38,6 +45,7 @@ class Note {
         this.active = 1;
     }
 }
+//Creates a node and sets play after 'start' seconds
 function createNote(n, start, time) {
     setTimeout(() => {
         const note = new Note(n, time);
@@ -47,9 +55,11 @@ function createNote(n, start, time) {
 
 q5.draw = function () {
     background('white');
+    //collector
     fill('yellow');
     rect(0, windowHeight * 0.9, windowWidth, collecterHeight);
     const dy = deltaTime * dPerS / 1000;
+    //tiles updater
     pKeys.forEach((note) => {
         if (note.active == 1) {
             note.y += dy;
@@ -65,26 +75,28 @@ q5.draw = function () {
             }
         }
     });
+    //delete tiles out or screen
     if (pKeys.length != 0 && pKeys[0].active == 0) {
         pKeys.shift();
     }
 
-    fill("red");
-    if (keyIsPressed) {
-        notes.forEach((n, i) => {
-            if (keyIsDown(n)) {
-                rect(i * noteW, windowHeight * 0.9, noteW, collecterHeight);
-            }
-        });
-    }
+    fill("green");
+    // keyboard check
+    notes.forEach((n, i) => {
+        if (keyIsDown(n)) {
+            rect(i * noteW, windowHeight * 0.9, noteW, collecterHeight);
+        }
+    });
+
 }
 
 function keyPressed(note) {
-    console.log(note.key);
+    //console.log(note.key);
     if (noteValues[note.key]) {
         synth.triggerAttackRelease(noteValues[note.key], "8n");
     } else {
         if (note.key == "q") {
+            //start tiles
             start();
         }
     }
