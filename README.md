@@ -3,7 +3,7 @@ Play piano (Coming soon!)
 ### Done
 * Simple tiles falling interface
 * Keys a to k on keyboard correcpond to C4-C5 (flat and sharp keys not added)
-* Simple sounds (single sized sound)
+* Simple sounds
 * Mary had a little lamb sequence on clicking 'q' key
 ### ToDo
 * Add flat and sharp keys

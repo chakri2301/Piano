@@ -1,6 +1,6 @@
 var q5 = new Q5();
 let synth = null;
-
+const now = Tone.now()
 
 q5.createCanvas(windowWidth, windowHeight);
 //Width for the lane of each note
@@ -30,11 +30,11 @@ let pKeys = [];
 function start() {
     const len = 0.5;
     const keys = [2, 1, 0, 1, 2, 2, 2, 1, 1, 1, 2, 4, 4, 2, 1, 0, 1, 2, 2, 2, 1, 1, 2, 1, 0];
-    console.log(keys);
+    //console.log(keys);
     keys.forEach((k, i) => {
         createNote(k, i * len, len * 0.8);
     });
-    synth = new Tone.Synth().toDestination();
+    synth = new Tone.PolySynth(Tone.Synth).toDestination();
 }
 //Tiles class
 class Note {
@@ -92,12 +92,17 @@ q5.draw = function () {
 
 function keyPressed(note) {
     //console.log(note.key);
-    if (noteValues[note.key]) {
-        synth.triggerAttackRelease(noteValues[note.key], "8n");
+    if (noteValues[note.key] && synth) {
+        synth.triggerAttack(noteValues[note.key]);
     } else {
         if (note.key == "q") {
             //start tiles
             start();
         }
+    }
+}
+function keyReleased(note) {
+    if (noteValues[note.key] && synth) {
+        synth.triggerRelease(noteValues[note.key]);
     }
 }
